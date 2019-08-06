@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: terminal
-        image: ibmappmodernization/web-terminal:0.1.0
+        image: ibmappmodernization/web-terminal:latest
         ports:
         - containerPort: 7681
 ---
