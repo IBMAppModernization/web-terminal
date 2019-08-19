@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart to deploy the ttyd web terminal to the IKS
+name: web-terminal
+version: 0.1.0

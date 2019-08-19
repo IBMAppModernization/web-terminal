@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: terminal-ingress
+  annotations:
+    ingress.bluemix.net/rewrite-path: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} rewrite=/;{{- end }}"
+    ingress.bluemix.net/proxy-connect-timeout: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} timeout=75s; {{- end }}"
+    ingress.bluemix.net/proxy-read-timeout: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} timeout=3600s; {{- end }}"
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.fullDomain }}
+    secretName: {{ .Values.tlsSecret }}
+  rules:
+  - host: {{ .Values.fullDomain }}
+    http:
+      paths:
+      {{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}
+      - path: "/term{{ $index }}"
+        backend:
+          serviceName: "terminal-service-{{ $index }}"
+          servicePort: 80
+      {{- end }}
+---
+
