@@ -12,7 +12,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/tmp/dind-docker"
+    path: "/tmp/dind-docker-{{ $index }}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -25,6 +25,9 @@ spec:
   resources:
     requests:
       storage: 10Gi
+  selector:
+    matchLabels:
+      app: "terminal-{{ $index }}"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -39,7 +42,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/tmp/dind-data"
+    path: "/tmp/dind-data-{{ $index }}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -52,5 +55,8 @@ spec:
   resources:
     requests:
       storage: 20Gi
+  selector:
+    matchLabels:
+      app: "terminal-{{ $index }}"
 ---
 {{- end }}
