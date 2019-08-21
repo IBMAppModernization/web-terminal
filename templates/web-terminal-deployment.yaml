@@ -1,0 +1,42 @@
+{{- $image := printf "%s:%s" .Values.repository .Values.tag -}}
+{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "terminal-{{ $index }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "terminal-{{ $index }}"
+    spec:
+      containers:
+      - name: "terminal-{{ $index }}"
+        image: "{{ $image }}"
+        ports:
+        - containerPort: 7681
+        env:
+          - name: DOCKER_HOST
+            value: tcp://localhost:2375
+        volumeMounts:
+          - name: "terminal-data-storage-{{ $index }}"
+            mountPath: /data
+      - name: "dind-daemon-{{ $index }}"
+        image: docker:18-dind 
+        securityContext: 
+          privileged: true 
+        volumeMounts: 
+          - name: "docker-graph-storage-{{ $index }}"
+            mountPath: /var/lib/docker
+          - name: "terminal-data-storage-{{ $index }}"
+            mountPath: /data
+      volumes: 
+        - name: "docker-graph-storage-{{ $index }}" 
+          persistentVolumeClaim:
+            claimName: "dockervol-{{ $index }}"
+        - name: "terminal-data-storage-{{ $index }}"
+          persistentVolumeClaim:
+            claimName: "datavol-{{ $index }}"
+---
+{{- end }}
