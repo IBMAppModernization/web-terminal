@@ -1,1 +1,1 @@
-## IBM Cloud CLI Web Terminal
+# IBM Cloud CLI Web Terminal
