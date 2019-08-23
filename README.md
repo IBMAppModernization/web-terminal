@@ -18,7 +18,7 @@ Additionally, this gives you the ability to install just about any other runtime
 - Python (Machine Learning workshops)
 - Swift (Best workshops)
 
-![](./images/working-web-terminal.png)
+![](./working-web-terminal.png)
 
 You can configure this to set up as many terminals as you want for as many people as you want (within reason), and each participant will have their own persistent storage for Docker images and their file system.
 
@@ -41,7 +41,7 @@ If you are interested in contributing to this facility:
 **GitHub**: https://github.com/IBMAppModernization/web-terminal  
 **DockerHub**: https://hub.docker.com/r/ibmappmodernization/web-terminal
 
-Please get in touch with [David Okun](https://github.ibm.com/David-Okun) or [Tim Robinson](https://github.ibm.com/Tim-Robinson) if you have questions.
+Please get in touch with [David Okun](https://github.com/dokun1) or [Tim Robinson](https://github.com/timroster) if you have questions.
 
 ### Step 1
 
@@ -235,4 +235,4 @@ There are some normal considerations to using this system.
 
 ### Questions
 
-You can find us on Slack @David Okun or @Tim Robinson or you can email us [here](mailto:david.okun@ibm.com) or [here](mailto:timro@us.ibm.com).
+You can find us on Twitter [@dokun24](https://twitter.com/dokun24) and [@timroexp](https://twitter.com/timroexp), or you can email us [here](mailto:david.okun@ibm.com) or [here](mailto:timro@us.ibm.com).
