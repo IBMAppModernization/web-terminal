@@ -1,0 +1,16 @@
+{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "terminal-translate-service-{{ $index }}"
+  labels:
+    app: "terminal-{{ $index }}"
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: "terminal-{{ $index }}"
+---
+{{- end -}}

@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: terminal-ingress
   annotations:
-    ingress.bluemix.net/rewrite-path: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} rewrite=/;{{- end }}"
+    ingress.bluemix.net/rewrite-path: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} rewrite=/;{{- end }}{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-translate-service-{{ $index }} rewrite=/;{{- end }}"
     ingress.bluemix.net/proxy-connect-timeout: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} timeout=75s; {{- end }}"
     ingress.bluemix.net/proxy-read-timeout: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} timeout=3600s; {{- end }}"
     kubernetes.io/ingress.class: nginx
@@ -22,5 +22,10 @@ spec:
           serviceName: "terminal-service-{{ $index }}"
           servicePort: 80
       {{- end }}
+      {{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}
+      - path: "/term{{ $index }}-translate/"
+        backend:
+          serviceName: "terminal-translate-service-{{ $index }}"
+          servicePort: 3000
+      {{- end }}
 ---
-
