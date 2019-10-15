@@ -12,8 +12,6 @@ spec:
         app: "terminal-{{ $index }}"
     spec:
       containers:
-      - name: "external-{{ $index }}"
-        image: ubuntu:latest
       - name: "terminal-{{ $index }}"
         image: "{{ $image }}"
         ports:

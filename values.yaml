@@ -4,4 +4,4 @@ participantCount: 5
 tlsSecret: ibm-app-modernization
 fullDomain: ibm-app-modernization.us-east.containers.appdomain.cloud
 repository: ibmappmodernization/web-terminal
-tag: jdk-8-0.2.0
+tag: nodejs10

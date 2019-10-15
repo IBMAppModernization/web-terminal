@@ -13,4 +13,60 @@ spec:
   selector:
     app: "terminal-{{ $index }}"
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "external-service-3000-{{ $index }}"
+  labels:
+    app: "terminal-{{ $index }}"
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 3000
+  selector:
+    app: "terminal-{{ $index }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "external-service-5000-{{ $index }}"
+  labels:
+    app: "terminal-{{ $index }}"
+spec:
+  type: NodePort
+  ports:
+  - port: 8081
+    targetPort: 5000
+  selector:
+    app: "terminal-{{ $index }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "external-service-8080-{{ $index }}"
+  labels:
+    app: "terminal-{{ $index }}"
+spec:
+  type: NodePort
+  ports:
+  - port: 8082
+    targetPort: 3000
+  selector:
+    app: "terminal-{{ $index }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "external-service-8081-{{ $index }}"
+  labels:
+    app: "terminal-{{ $index }}"
+spec:
+  type: NodePort
+  ports:
+  - port: 8083
+    targetPort: 3000
+  selector:
+    app: "terminal-{{ $index }}"
+---
 {{- end -}}
