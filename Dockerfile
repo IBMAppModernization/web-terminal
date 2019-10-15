@@ -12,13 +12,14 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   sudo \
   systemd \
-  openjdk-8-jdk \
-  maven \
 && rm -rf /var/lib/apt/lists/*
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN apt-get install -y nodejs
 RUN curl -sL https://ibm.biz/idt-installer | bash
 RUN git clone https://github.com/tsl0922/ttyd.git
 RUN cd ttyd && mkdir build && cd build && cmake .. && make && make install
+RUN npm install -g loopback-cli
 EXPOSE 7681
 
 CMD ["ttyd", "-p", "7681", "bash"]
