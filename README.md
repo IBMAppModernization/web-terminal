@@ -121,7 +121,7 @@ After this, you need to wait for Tiller, the server-side component of Helm, to f
 
 ### Step 6
 
-In Terminal, ensure that you are at the root directory of `web-terminal` by typing `ls`.  You should see that you have `Chart.yaml` and `templates/` in the output. Next, enter the following command:
+In your own Terminal, ensure that you are at the root directory of `web-terminal` by typing `ls`.  You should see that you have `chart/` in the output. Next, enter the following command:
 
 ```bash
 helm install --name web-terminal chart/web-terminal/
