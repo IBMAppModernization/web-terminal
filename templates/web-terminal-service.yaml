@@ -51,7 +51,7 @@ spec:
   type: NodePort
   ports:
   - port: 8082
-    targetPort: 3000
+    targetPort: 8080
   selector:
     app: "terminal-{{ $index }}"
 ---
@@ -65,7 +65,7 @@ spec:
   type: NodePort
   ports:
   - port: 8083
-    targetPort: 3000
+    targetPort: 8081
   selector:
     app: "terminal-{{ $index }}"
 ---

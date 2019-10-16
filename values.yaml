@@ -1,6 +1,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-participantCount: 5
+participantCount: 3
 tlsSecret: ibm-app-modernization
 fullDomain: ibm-app-modernization.us-east.containers.appdomain.cloud
 repository: ibmappmodernization/web-terminal
