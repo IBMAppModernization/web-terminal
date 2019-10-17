@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: terminal-ingress
+  annotations:
+    ingress.bluemix.net/rewrite-path: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} rewrite=/; serviceName=external-service-3000-{{ $index }} rewrite=/; serviceName=external-service-5000-{{ $index }} rewrite=/; serviceName=external-service-8080-{{ $index }} rewrite=/; serviceName=external-service-8081-{{ $index }} rewrite=/; {{- end }}"
+    ingress.bluemix.net/proxy-connect-timeout: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} timeout=75s;  serviceName=external-service-3000{{ $index }} timeout=75s; serviceName=external-service-5000-{{ $index }} timeout=75s; serviceName=external-service-8080-{{ $index }} timeout=75s; serviceName=external-service-8081-{{ $index }} timeout=75s; {{- end }}"
+    ingress.bluemix.net/proxy-read-timeout: "{{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}serviceName=terminal-service-{{ $index }} timeout=3600s; serviceName=external-service-3000-{{ $index }} timeout=3600s; serviceName=external-service-5000-{{ $index }} timeout=3600s; serviceName=external-service-8080-{{ $index }} timeout=3600s; serviceName=external-service-8081-{{ $index }} timeout=3600s; {{- end }}"
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.fullDomain }}
+    secretName: {{ .Values.tlsSecret }}
+  rules:
+  - host: {{ .Values.fullDomain }}
+    http:
+      paths:
+      {{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}
+      - path: "/term{{ $index }}"
+        backend:
+          serviceName: "terminal-service-{{ $index }}"
+          servicePort: 80
+      - path: "/ext3000-{{ $index }}"
+        backend:
+          serviceName: "external-service-3000-{{ $index }}"
+          servicePort: 8080
+      - path: "/ext5000-{{ $index }}"
+        backend:
+          serviceName: "external-service-5000-{{ $index }}"
+          servicePort: 8081
+      - path: "/ext8080-{{ $index }}"
+        backend:
+          serviceName: "external-service-8080-{{ $index }}"
+          servicePort: 8082
+      - path: "/ext8081-{{ $index }}"
+        backend:
+          serviceName: "external-service-8081-{{ $index }}"
+          servicePort: 8083
+      {{- end }}
+---
