@@ -43,6 +43,14 @@ If you are interested in contributing to this facility:
 
 Please get in touch with [David Okun](https://github.com/dokun1) or [Tim Robinson](https://github.com/timroster) if you have questions.
 
+### Step 0
+
+You will need a few tools installed locally first. You can find specific instructions for your specific machine on the corresponding websites.
+
+- Kubectl
+- Helm (minimum version: 2.14.3)
+- IBM Cloud CLI
+
 ### Step 1
 
 Provision a Kubernetes cluster. Again, if you are using the IKS, you cannot use the free cluster, as the free cluster:
