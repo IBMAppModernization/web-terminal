@@ -58,19 +58,48 @@ Provision a Kubernetes cluster. Again, if you are using the IKS, you cannot use 
 - can not leverage a persistent volume
 - can not leverage an ingress controller
 
-In Terminal, log into IBM Cloud with `ibmcloud login`. Run `ibmcloud ks clusters` to get the name of your cluster:
+In Terminal, log into IBM Cloud with `ibmcloud login`.
 
-```bash
-testing-cluster           bkss2low0aucnromsrm0               normal   2 weeks ago   1         Washington D.C.   1.13.8_1529   dokun-personal
+```console
+$ ibmcloud login -u <username> -p <password>
+$ ibmcloud target --cf
+$ ibmcloud target -g Default
+```
+
+Create a Classic Cluster,
+```console
+$ ibmcloud ks zones
+$ ibmcloud ks machine-types --zone dal10
+$ ibmcloud ks cluster create classic --name <account_name>_iks_cluster_<number> --zone dal10 --machine-type b3c.4x16 --hardware shared --workers 3 
+$ ibmcloud ks clusters
+OK
+Name                   ID                     State       Created         Workers   Location   Version       Resource Group Name   Provider   
+<account_name>_iks_cluster_<number>   bmlsts5d0t3g5m3oobd0   deploying   2 minutes ago   3         Dallas     1.14.7_1534   -                     classic
+$ ibmcloud ks vlan ls --zone dal10
+OK
+ID        Name   Number   Type      Router         Supports Virtual Workers   
+2730902          1593     private   bcr03a.dal10   true   
+2730900          1519     public    fcr03a.dal10   true 
+```
+
+Run `ibmcloud ks clusters` to get the name of your cluster:
+
+```console
+$ ibmcloud ks clusters
+OK
+Name  ID  State  Created  Workers   Location  Version  Resource Group Name   Provider
+testing-cluster   bkss2low0aucnromsrm0   normal  2 weeks ago  1         Washington D.C.   1.13.8_1529   dokun-personal
 ```
 
 The name of your cluster, in this instance, is `testing-cluster`.
 
+
 ### Step 2
 
-Next, get the details of DNS and the TLS secret on your cluster with the command `ibmcloud ks cluster-get --cluster testing-cluster | grep Ingress`. Your output should look like this:
+Next, get the details of DNS and the TLS secret on your cluster with the command `ibmcloud ks cluster get --cluster testing-cluster | grep Ingress`. Your output should look like this:
 
-```bash
+```console
+$ ibmcloud ks cluster get --cluster testing-cluster | grep Ingress
 Ingress Subdomain:              testing-cluster.us-east.containers.appdomain.cloud
 Ingress Secret:                 testing-cluster
 ```
@@ -79,11 +108,16 @@ Keep track of these values for later.
 
 ### Step 3
 
-Run the command `git clone https://github.com/IBMAppModernization/web-terminal.git`, then `cd web-terminal`. First, open `chart/web-terminal/values.yaml` in a text editor of your choice. Make the following changes:
+To retrieve the source code, run the command `git clone https://github.com/IBMAppModernization/web-terminal.git`, then `cd web-terminal`. First, open `chart/web-terminal/values.yaml` in a text editor of your choice. Make the following changes:
+
+```console
+$ git clone https://github.com/IBMAppModernization/web-terminal.git
+$ cd web-terminal
+```
 
 - `participantCount`: this should be a number, and will set up that many terminal instances at `/term1`, `/term2`, etc...
-- `tlsSecret`: the name of your TLS secret from Step 2
-- `fullDomain`: the full domain of your cluster from Step 2
+- `tlsSecret`: the name of your Ingress Secret from Step 2
+- `fullDomain`: the full domain of your Ingress Subdomain from Step 2
 - `repository`: by default, this should be `ibmappmodernization/web-terminal` to use our Docker image, but feel free to use your own if you have another image
 - `tag`: you have choices, check out the available tags [here](https://hub.docker.com/r/ibmappmodernization/web-terminal/tags)
 
@@ -93,21 +127,21 @@ Save your file.
 
 Connect to your Kubernetes cluster. To do this, open Terminal and enter the following commands:
 
-```bash
-ibmcloud ks clusters
+```console
+$ ibmcloud ks clusters
 ```
 
 Find the name of your cluster, then enter the following command:
 
-```bash
-$(ibmcloud ks cluster config your-cluster-name | grep export)
+```console
+$ ibmcloud ks cluster config --cluster your-cluster-name | grep export
 ```
 
 This should automatically connect you to your cluster. To confirm, enter the following commands:
 
-```bash
-kubectl cluster-info
-kubectl get all
+```console
+$ kubectl cluster-info
+$ kubectl get all
 ```
 
 You should see that you are connected to your cluster.
@@ -118,11 +152,17 @@ You should see that you are connected to your cluster.
 
 [Helm](https://helm.sh/) is a package manager that you will use to install this web terminal in one line. Helm is not installed on IKS clusters by default, so you need to set up your cluster one time to use it. You will enter four commands in the following sequence:
 
-```bash
-kubectl create serviceaccount --namespace kube-system tiller
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-helm init --upgrade
-kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+```console
+$ kubectl create serviceaccount --namespace kube-system tiller
+serviceaccount/tiller created
+$ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+clusterrolebinding.rbac.authorization.k8s.io/tiller-cluster-rule created
+$ helm init --upgrade
+$HELM_HOME has been configured at /Users/user1/.helm.
+
+Tiller (the Helm server-side component) has been upgraded to the current version.
+Happy Helming!
+$ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 ```
 
 After this, you need to wait for Tiller, the server-side component of Helm, to finish installing. This usually takes 1-2 minutes. To confirm you have installed Helm correctly, enter `helm list`. If you get no output as a result, you are ready.
@@ -131,13 +171,14 @@ After this, you need to wait for Tiller, the server-side component of Helm, to f
 
 In your own Terminal, ensure that you are at the root directory of `web-terminal` by typing `ls`.  You should see that you have `chart/` in the output. Next, enter the following command:
 
-```bash
-helm install --name web-terminal chart/web-terminal/
+```console
+$ helm install --name web-terminal chart/web-terminal/
 ```
 
 And that's it! You should see output that indicates all of the resources deployed to your kubernetes cluster. Depending on how many participants are in your workshop, this could vary in setup time anywhere from 30 seconds to 4 minutes. After making some coffee, type `kubectl get all` to see output that looks like so:
 
-```bash
+```console
+$ kubectl get all
 NAME                              READY   STATUS    RESTARTS   AGE
 pod/terminal-1-6755b9c4cb-m64jf   2/2     Running   0          28s
 pod/terminal-2-6464689886-g9pwx   2/2     Running   0          28s
@@ -174,7 +215,8 @@ replicaset.apps/terminal-3-7948498fc6   1         1         1       28s
 
 Next, type `kubectl describe ing` to observe how ingress is set up on your cluster for this app:
 
-```bash
+```console
+$ kubectl describe ing
 Name:             terminal-ingress
 Namespace:        default
 Address:          169.45.224.22
@@ -182,32 +224,44 @@ Default backend:  default-http-backend:80 (<none>)
 TLS:
   ibm-app-modernization terminates ibm-app-modernization.us-east.containers.appdomain.cloud
 Rules:
-  Host                                                      Path  Backends
-  ----                                                      ----  --------
+  Host      Path       Backends
+  ----      ----       --------
   ibm-app-modernization.us-east.containers.appdomain.cloud
-                                                            /term1       terminal-service-1:80 (172.30.95.151:7681)
-                                                            /ext3000-1   external-service-3000-1:8080 (172.30.95.151:3000)
-                                                            /ext5000-1   external-service-5000-1:8081 (172.30.95.151:5000)
-                                                            /ext8080-1   external-service-8080-1:8082 (172.30.95.151:8080)
-                                                            /ext8081-1   external-service-8081-1:8083 (172.30.95.151:8081)
-                                                            /term2       terminal-service-2:80 (172.30.95.148:7681)
-                                                            /ext3000-2   external-service-3000-2:8080 (172.30.95.148:3000)
-                                                            /ext5000-2   external-service-5000-2:8081 (172.30.95.148:5000)
-                                                            /ext8080-2   external-service-8080-2:8082 (172.30.95.148:8080)
-                                                            /ext8081-2   external-service-8081-2:8083 (172.30.95.148:8081)
-                                                            /term3       terminal-service-3:80 (172.30.95.156:7681)
-                                                            /ext3000-3   external-service-3000-3:8080 (172.30.95.156:3000)
-                                                            /ext5000-3   external-service-5000-3:8081 (172.30.95.156:5000)
-                                                            /ext8080-3   external-service-8080-3:8082 (172.30.95.156:8080)
-                                                            /ext8081-3   external-service-8081-3:8083 (172.30.95.156:8081)
+			/term1       terminal-service-1:80 (172.30.95.151:7681)
+			/ext3000-1   external-service-3000-1:8080 (172.30.95.151:3000)
+			/ext5000-1   external-service-5000-1:8081 (172.30.95.151:5000)
+			/ext8080-1   external-service-8080-1:8082 (172.30.95.151:8080)
+			/ext8081-1   external-service-8081-1:8083 (172.30.95.151:8081)
+			/term2       terminal-service-2:80 (172.30.95.148:7681)
+			/ext3000-2   external-service-3000-2:8080 (172.30.95.148:3000)
+			/ext5000-2   external-service-5000-2:8081 (172.30.95.148:5000)
+			/ext8080-2   external-service-8080-2:8082 (172.30.95.148:8080)
+			/ext8081-2   external-service-8081-2:8083 (172.30.95.148:8081)
+			/term3       terminal-service-3:80 (172.30.95.156:7681)
+			/ext3000-3   external-service-3000-3:8080 (172.30.95.156:3000)
+			/ext5000-3   external-service-5000-3:8081 (172.30.95.156:5000)
+			/ext8080-3   external-service-8080-3:8082 (172.30.95.156:8080)
+			/ext8081-3   external-service-8081-3:8083 (172.30.95.156:8081)
+			/term4       terminal-service-4:80 (172.30.95.156:7681)
+			/ext3000-4   external-service-3000-4:8080 (172.30.95.156:3000)
+			/ext5000-4   external-service-5000-4:8081 (172.30.95.156:5000)
+			/ext8080-4   external-service-8080-4:8082 (172.30.95.156:8080)
+			/ext8081-4   external-service-8081-4:8083 (172.30.95.156:8081)
+			/term5       terminal-service-5:80 (172.30.95.156:7681)
+			/ext3000-5   external-service-3000-5:8080 (172.30.95.156:3000)
+			/ext5000-5   external-service-5000-5:8081 (172.30.95.156:5000)
+			/ext8080-5   external-service-8080-5:8082 (172.30.95.156:8080)
+			/ext8081-5   external-service-8081-5:8083 (172.30.95.156:8081)
 Annotations:
   ingress.bluemix.net/proxy-connect-timeout:  serviceName=terminal-service-1 timeout=75s;  serviceName=external-service-30001 timeout=75s; serviceName=external-service-5000-1 timeout=75s; serviceName=external-service-8080-1 timeout=75s; serviceName=external-service-8081-1 timeout=75s;serviceName=terminal-service-2 timeout=75s;  serviceName=external-service-30002 timeout=75s; serviceName=external-service-5000-2 timeout=75s; serviceName=external-service-8080-2 timeout=75s; serviceName=external-service-8081-2 timeout=75s;serviceName=terminal-service-3 timeout=75s;  serviceName=external-service-30003 timeout=75s; serviceName=external-service-5000-3 timeout=75s; serviceName=external-service-8080-3 timeout=75s; serviceName=external-service-8081-3 timeout=75s;
   ingress.bluemix.net/proxy-read-timeout:     serviceName=terminal-service-1 timeout=3600s; serviceName=external-service-3000-1 timeout=3600s; serviceName=external-service-5000-1 timeout=3600s; serviceName=external-service-8080-1 timeout=3600s; serviceName=external-service-8081-1 timeout=3600s;serviceName=terminal-service-2 timeout=3600s; serviceName=external-service-3000-2 timeout=3600s; serviceName=external-service-5000-2 timeout=3600s; serviceName=external-service-8080-2 timeout=3600s; serviceName=external-service-8081-2 timeout=3600s;serviceName=terminal-service-3 timeout=3600s; serviceName=external-service-3000-3 timeout=3600s; serviceName=external-service-5000-3 timeout=3600s; serviceName=external-service-8080-3 timeout=3600s; serviceName=external-service-8081-3 timeout=3600s;
   ingress.bluemix.net/rewrite-path:           serviceName=terminal-service-1 rewrite=/; serviceName=external-service-3000-1 rewrite=/; serviceName=external-service-5000-1 rewrite=/; serviceName=external-service-8080-1 rewrite=/; serviceName=external-service-8081-1 rewrite=/;serviceName=terminal-service-2 rewrite=/; serviceName=external-service-3000-2 rewrite=/; serviceName=external-service-5000-2 rewrite=/; serviceName=external-service-8080-2 rewrite=/; serviceName=external-service-8081-2 rewrite=/;serviceName=terminal-service-3 rewrite=/; serviceName=external-service-3000-3 rewrite=/; serviceName=external-service-5000-3 rewrite=/; serviceName=external-service-8080-3 rewrite=/; serviceName=external-service-8081-3 rewrite=/;
+  serviceName=terminal-service-4 rewrite=/; serviceName=external-service-3000-4 rewrite=/; serviceName=external-service-5000-4 rewrite=/; serviceName=external-service-8080-4 rewrite=/; serviceName=external-service-8081-4 rewrite=/;
+  serviceName=terminal-service-5 rewrite=/; serviceName=external-service-3000-5 rewrite=/; serviceName=external-service-5000-5 rewrite=/; serviceName=external-service-8080-5 rewrite=/; serviceName=external-service-8081-5 rewrite=/;
   kubernetes.io/ingress.class:                nginx
 Events:
-  Type    Reason   Age    From                                                 Message
-  ----    ------   ----   ----                                                 -------
+  Type    Reason   Age    From    Message
+  ----    ------   ----   ----    -------
   Normal  Success  2m11s  public-crblt9hsew0nlkd0hg2lbg-alb1-544db8bfd8-c5db4  Successfully applied ingress resource.
 ```
 
@@ -236,8 +290,8 @@ If you run a docker container with port 	3000 exposed inside `/term1`, then you 
 
 In terminal, enter the following command:
 
-```bash
-helm delete --purge web-terminal
+```console
+$ helm delete --purge web-terminal
 ```
 
 After about 1 minute, enter `kubectl get all` to ensure that all related resources have been cleaned up. 
@@ -246,14 +300,14 @@ After about 1 minute, enter `kubectl get all` to ensure that all related resourc
 
 To ensure that your persistent storage is wiped clean for future workshops using this cluster, ensure that you are still at the root directory of this repository, and enter the following command:
 
-```bash
-kubectl create -f scrub-dind.yaml
+```console
+$ kubectl create -f scrub-dind.yaml
 ```
 
 This will purge all of the storage used for Docker images and file systems. Count to 30, then enter the following command:
 
-```bash
-kubectl delete -f scrub-dind.yaml
+```console
+$ kubectl delete -f scrub-dind.yaml
 ```
 
 This will delete the pod that purges the file system, and you are ready to go again.
