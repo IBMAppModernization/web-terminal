@@ -1,0 +1,40 @@
+FROM ubuntu:18.04
+
+ARG ISTIO_VERSION=1.3.3
+
+WORKDIR /
+
+RUN apt-get update && apt-get install -y \
+  cmake \
+  curl \
+  g++ \
+  pkg-config \
+  git \
+  vim-common \
+  libwebsockets-dev \
+  libjson-c-dev \
+  libssl-dev \
+  sudo \
+  systemd \
+&& rm -rf /var/lib/apt/lists/*
+
+# Install ttyd terminal for web
+RUN git clone https://github.com/tsl0922/ttyd.git
+RUN cd ttyd && mkdir build && cd build && cmake .. && make && make install
+
+# Install IBM Cloud Developer Tools CLI
+RUN curl -sL https://ibm.biz/idt-installer | bash
+
+# Install instioctl and samples
+WORKDIR /data
+RUN curl -sL https://git.io/getLatestIstio | ISTIO_VERSION=$ISTIO_VERSION bash - \
+  && cd ./istio-1.3.3 \
+  && cp bin/istioctl /usr/local/bin/istioctl \
+  && ls -al /usr/local/bin/ \
+  && ls -al /data
+
+WORKDIR /
+
+EXPOSE 7681
+
+CMD ["ttyd", "-p", "7681", "bash"]

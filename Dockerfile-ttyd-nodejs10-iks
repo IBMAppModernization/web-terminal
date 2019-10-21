@@ -1,0 +1,13 @@
+FROM remkohdev/base-ttyd-iks:0.1.0
+
+ARG ISTIO_VERSION=1.3.3
+
+WORKDIR /
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN apt-get install -y nodejs
+RUN npm install -g loopback-cli
+
+EXPOSE 7681
+
+CMD ["ttyd", "-p", "7681", "bash"]

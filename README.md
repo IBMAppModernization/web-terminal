@@ -108,20 +108,45 @@ Keep track of these values for later.
 
 ### Step 3
 
-To retrieve the source code, run the command `git clone https://github.com/IBMAppModernization/web-terminal.git`, then `cd web-terminal`. First, open `chart/web-terminal/values.yaml` in a text editor of your choice. Make the following changes:
+To retrieve the source code, run the command `git clone https://github.com/IBMAppModernization/web-terminal.git`, then `cd web-terminal`. 
 
 ```console
 $ git clone https://github.com/IBMAppModernization/web-terminal.git
 $ cd web-terminal
 ```
 
+First, open `chart/web-terminal/values.yaml` in a text editor of your choice. Make the following changes:
+
 - `participantCount`: this should be a number, and will set up that many terminal instances at `/term1`, `/term2`, etc...
 - `tlsSecret`: the name of your Ingress Secret from Step 2
 - `fullDomain`: the full domain of your Ingress Subdomain from Step 2
-- `repository`: by default, this should be `ibmappmodernization/web-terminal` to use our Docker image, but feel free to use your own if you have another image
+- `repository`: by default, this should be `ibmappmodernization/web-terminal` to use our Docker image, but feel free to use your own image in a public Docker Hub repository, if you have another image
 - `tag`: you have choices, check out the available tags [here](https://hub.docker.com/r/ibmappmodernization/web-terminal/tags)
 
 Save your file.
+
+To build your own file:
+
+```console
+$ docker login -u <docker-username> -p <password>
+$ docker build --no-cache -t web-terminal -f Dockerfile-nodejs10 .
+$ docker tag web-terminal:latest <docker-username>/web-terminal:nodejs10
+$ docker push <docker-username>/web-terminal:nodejs10
+```
+
+Alternatively, build, tag and push the base image,
+```console
+$ docker build --no-cache -t base-ttyd-iks -f Dockerfile-base-ttyd-iks .
+$ docker tag base-ttyd-iks:latest <docker-username>/base-ttyd-iks:0.1.0
+$ docker push <docker-username>/base-ttyd-iks:0.1.0
+```
+
+and then build, tag and push the runtime specific image,
+```console
+$ docker build --no-cache -t ttyd-nodejs10-iks -f Dockerfile-ttyd-nodejs10-iks .
+$ docker tag ttyd-nodejs10-iks:latest <docker-username>/ttyd-nodejs10-iks:0.1.0
+$ docker push <docker-username>/ttyd-nodejs10-iks:0.1.0
+```
 
 ### Step 4
 
