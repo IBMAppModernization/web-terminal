@@ -4,9 +4,13 @@ ARG ISTIO_VERSION=1.3.3
 
 WORKDIR /
 
+# Add Node and Loopback
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
 RUN apt-get install -y nodejs
 RUN npm install -g loopback-cli
+
+# Install ibmcloud event streams plugin
+RUN ibmcloud plugin install -f -r "IBM Cloud" event-streams
 
 EXPOSE 7681
 
