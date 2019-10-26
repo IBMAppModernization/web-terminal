@@ -1,16 +1,47 @@
-FROM remkohdev/base-ttyd-iks:0.1.0
+FROM ubuntu:18.04
 
-ARG ISTIO_VERSION=1.3.3
+ARG ISTIO_VERSION=1.3.2
+RUN mkdir /user-data
 
-WORKDIR /
+RUN apt-get update && apt-get install -y \
+  cmake \
+  curl \
+  g++ \
+  pkg-config \
+  git \
+  vim-common \
+  libwebsockets-dev \
+  libjson-c-dev \
+  libssl-dev \
+  sudo \
+  systemd \
+  wget \
+&& rm -rf /var/lib/apt/lists/*
+
+# Install ttyd terminal for web
+RUN git clone https://github.com/tsl0922/ttyd.git
+RUN cd ttyd && mkdir build && cd build && cmake .. && make && make install
+
+# Install IBM Cloud Developer Tools CLI
+RUN curl -sL https://ibm.biz/idt-installer | bash 
+RUN ibmcloud plugin install -f -r "IBM Cloud" event-streams
 
 # Add Node and Loopback
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
 RUN apt-get install -y nodejs
 RUN npm install -g loopback-cli
 
-# Install ibmcloud event streams plugin
-RUN ibmcloud plugin install -f -r "IBM Cloud" event-streams
+# Install instioctl and samples
+WORKDIR /user-data
+RUN curl -sL https://git.io/getLatestIstio | ISTIO_VERSION=$ISTIO_VERSION bash - \
+  && cd ./istio-$ISTIO_VERSION \
+  && cp bin/istioctl /usr/local/bin/istioctl
+
+# Install Kafka and console tools
+ADD https://www-us.apache.org/dist/kafka/2.3.0/kafka_2.12-2.3.0.tgz .
+RUN tar -xvf kafka_2.12-2.3.0.tgz \
+  && cp -r kafka_2.12-2.3.0 /usr/local/share/kafka_2.12-2.3.0 \
+  && ls -al /usr/local/share/ 
 
 EXPOSE 7681
 
