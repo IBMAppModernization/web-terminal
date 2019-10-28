@@ -49,7 +49,7 @@ echo "=====> 1. login to ibmcloud"
 ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r $ibmcloud_admin_region -g $ibmcloud_admin_resourcegroups
 ibmcloud target --cf
 
-echo "=====> 2. create clusters"
+echo "=====> 2. enable istio on clusters"
 for (( n=0;n<$number_of_users;n++ ))
 do
     echo "create cluster for user ${n}"
