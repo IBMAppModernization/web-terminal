@@ -45,11 +45,24 @@ else
 fi
 
 # LOGIN
+echo "=====> 1. login to ibmcloud"
 ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r $ibmcloud_admin_region -g $ibmcloud_admin_resourcegroups
 ibmcloud target --cf
+
 # CREATE CLUSTERS
+echo "=====> 2. create clusters"
 for (( n=0;n<$number_of_users;n++ ))
 do
-    echo "creating cluster for user ${n}"
-    ibmcloud ks cluster create classic --name "${account_name}_iks_cluster_user${n}" --zone $ibmcloud_admin_zone --machine-type $ibmcloud_admin_flavor --hardware shared --workers $ibmcloud_admin_cluster_workers --public-vlan $ibmcloud_admin_vlan_public_id --private-vlan $ibmcloud_admin_vlan_private_id
+    echo "create cluster for user ${n}"
+    # a. create cluster
+	ibmcloud ks cluster create classic --name "${account_name}_iks_cluster_user${n}" --zone $ibmcloud_admin_zone --machine-type $ibmcloud_admin_flavor --hardware shared --workers $ibmcloud_admin_cluster_workers --public-vlan $ibmcloud_admin_vlan_public_id --private-vlan $ibmcloud_admin_vlan_private_id
+
+done
+
+# CREATE KAFKA EVENT STREAMS
+ibmcloud plugin install event-streams
+for (( n=0;n<$number_of_users;n++ ))
+do
+    echo "create kafka event streams for user ${n}"
+	ibmcloud resource service-instance-create "${account_name}-eventstreams-user${n}" messagehub standard us-south
 done
