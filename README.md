@@ -61,9 +61,8 @@ Provision a Kubernetes cluster. Again, if you are using the IKS, you cannot use 
 In Terminal, log into IBM Cloud with `ibmcloud login`.
 
 ```console
-$ ibmcloud login -u <username> -p <password>
+$ ibmcloud login -a cloud.ibm.com -u <username> -p '<password>' -g Default -r 'us-south'
 $ ibmcloud target --cf
-$ ibmcloud target -g Default
 ```
 
 Create a Classic Cluster,
@@ -137,15 +136,15 @@ $ docker push <docker-username>/web-terminal:nodejs10
 Alternatively, build, tag and push the base image,
 ```console
 $ docker build --no-cache -t base-ttyd-iks -f Dockerfile-base-ttyd-iks .
-$ docker tag base-ttyd-iks:latest <docker-username>/base-ttyd-iks:0.1.0
-$ docker push <docker-username>/base-ttyd-iks:0.1.0
+$ docker tag base-ttyd-iks:latest <docker-username>/base-ttyd-iks:0.1.1
+$ docker push <docker-username>/base-ttyd-iks:0.1.1
 ```
 
 and then build, tag and push the runtime specific image,
 ```console
 $ docker build --no-cache -t ttyd-nodejs10-iks -f Dockerfile-ttyd-nodejs10-iks .
-$ docker tag ttyd-nodejs10-iks:latest <docker-username>/ttyd-nodejs10-iks:0.1.0
-$ docker push <docker-username>/ttyd-nodejs10-iks:0.1.0
+$ docker tag ttyd-nodejs10-iks:latest <docker-username>/ttyd-nodejs10-iks:0.1.1
+$ docker push <docker-username>/ttyd-nodejs10-iks:0.1.1
 ```
 
 ### Step 4

@@ -1,7 +1,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 participantCount: 10
-tlsSecret: ibm-app-modernization
-fullDomain: ibm-app-modernization.us-east.containers.appdomain.cloud
-repository: ibmappmodernization/web-terminal
-tag: nodejs10
+tlsSecret: usbankikscluster1
+fullDomain: usbankikscluster1.us-south.containers.appdomain.cloud
+repository: remkohdev/ttyd-nodejs10-iks
+tag: 0.2.0
