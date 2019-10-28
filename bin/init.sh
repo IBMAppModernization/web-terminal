@@ -60,6 +60,7 @@ do
 done
 
 # CREATE KAFKA EVENT STREAMS
+echo "=====> 3. create kafka event streams"
 ibmcloud plugin install event-streams
 for (( n=0;n<$number_of_users;n++ ))
 do
