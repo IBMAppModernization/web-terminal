@@ -1,7 +1,7 @@
 ## Setup
 
 * Your IKS Cluster Name: &lt;account&gt;_iks_cluster_user&lt;usernumber&gt;,
-* Your Web-Terminal URL: http://ibmiksclusterwebterminals.us-south.containers.appdomain.cloud/term&lt;usernumber&gt;
+* Your Web-Terminal URL: http://ibmiksclusterwebterminals.us-south.containers.appdomain.cloud/term &lt;usernumber&gt;
 * IKS Kubernetes Cluster: 
   * Cluster:
   * Ingress subdomain: &lt;account&gt;iksclusteruser&lt;usernumber&gt;.us-south.containers.appdomain.cloud
