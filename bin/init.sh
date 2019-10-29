@@ -30,10 +30,12 @@ then
   done < "$config_file"
   echo "account.name=" ${account_name}
   echo "number_of_users=" ${number_of_users}
+  echo "user_offset=" ${user_offset}
   echo "ibmcloud.admin.username=" ${ibmcloud_admin_username}
   echo "ibmcloud.admin.password=" ${ibmcloud_admin_password}
   echo "ibmcloud.admin.org=" ${ibmcloud_admin_org}
   echo "ibmcloud.admin.resourcegroup=" ${ibmcloud_admin_resourcegroup}
+  echo "ibmcloud.admin.cfapi=" ${ibmcloud_admin_cfapi}
   echo "ibmcloud.admin.region=" ${ibmcloud_admin_region}
   echo "ibmcloud.admin.zone=" ${ibmcloud_admin_zone}
   echo "ibmcloud.admin.flavor=" ${ibmcloud_admin_flavor}
@@ -46,12 +48,15 @@ fi
 
 # LOGIN
 echo "=====> 1. login to ibmcloud"
-ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r $ibmcloud_admin_region -g $ibmcloud_admin_resourcegroups
-ibmcloud target --cf
+echo ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
+ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
+
+echo ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s dev -o $ibmcloud_admin_org
+ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s dev -o $ibmcloud_admin_org
 
 # CREATE CLUSTERS
 echo "=====> 2. create clusters"
-for (( n=0;n<$number_of_users;n++ ))
+for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
     echo "create cluster for user ${n}"
     # a. create cluster
@@ -61,8 +66,8 @@ done
 
 # CREATE KAFKA EVENT STREAMS
 echo "=====> 3. create kafka event streams"
-ibmcloud plugin install event-streams
-for (( n=0;n<$number_of_users;n++ ))
+#ibmcloud plugin install event-streams
+for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
     echo "create kafka event streams for user ${n}"
 	ibmcloud resource service-instance-create "${account_name}-eventstreams-user${n}" messagehub standard us-south
