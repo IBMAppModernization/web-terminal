@@ -70,5 +70,6 @@ echo "=====> 3. create kafka event streams"
 for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
     echo "create kafka event streams for user ${n}"
-	ibmcloud resource service-instance-create "${account_name}-eventstreams-user${n}" messagehub standard us-south
+	ibmcloud resource service-instance-create "${account_name}-eventstreams-user${n}" messagehub standard $ibmcloud_admin_zone
+	ibmcloud resource service-key-create "${account_name}-eventstreams-user${n}-credentials1" Manager --instance-name "${account_name}-eventstreams-user${n}"
 done
