@@ -1,5 +1,7 @@
 ## Setup
 
+Each participant will be assigned their own usernumber, which will correspond with the names of the Kubernetes cluster and IBM Cloud services that are assigned to you for this workshop. 
+
 * Your IKS Cluster Name: &lt;account&gt;_iks_cluster_user&lt;usernumber&gt;,
 * Your Web-Terminal URL: http://&lt;terminal-cluster&gt;.us-south.containers.appdomain.cloud/term &lt;usernumber&gt;
 * IKS Kubernetes Cluster: 
@@ -20,7 +22,7 @@
 
 ## Istio
 
-
+* Go to 
 
 ## Kafka and Event Streams
 
@@ -33,7 +35,4 @@
 
 * Go to Lab03, 
 * If you have the Spring Boot CLI already installed, skip to the "Create a Spring App" section, https://github.com/remkohdev/kafka101/blob/master/Lab03/README.md#create-a-spring-app
-
-
-
 

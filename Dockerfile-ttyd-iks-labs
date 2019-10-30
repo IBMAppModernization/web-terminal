@@ -28,9 +28,9 @@ RUN curl -sL https://ibm.biz/idt-installer | bash
 RUN ibmcloud plugin install -f -r "IBM Cloud" event-streams
 
 # Add Node and Loopback
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
-RUN apt-get install -y nodejs
-RUN npm install -g loopback-cli
+#RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+#RUN apt-get install -y nodejs
+#RUN npm install -g loopback-cli
 
 # Install instioctl and samples
 WORKDIR /userdata

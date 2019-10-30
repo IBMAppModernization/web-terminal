@@ -47,18 +47,9 @@ else
 fi
 
 # LOGIN
-echo "=====> 1. login to ibmcloud"
+echo "=====> login to ibmcloud"
 echo ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
 ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
 
 echo ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s dev -o $ibmcloud_admin_org
 ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s dev -o $ibmcloud_admin_org
-
-echo "=====> 2. enable istio on clusters"
-for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
-do
-    echo "create cluster for user ${n}"
-	ibmcloud ks cluster addon enable istio --cluster "${account_name}_iks_cluster_user${n}"
-	ibmcloud ks cluster addon enable istio-extras --cluster "${account_name}_iks_cluster_user${n}"
-	ibmcloud ks cluster addon enable istio-sample-bookinfo --cluster "${account_name}_iks_cluster_user${n}"
-done
