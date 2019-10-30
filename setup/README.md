@@ -18,15 +18,22 @@
    
 # Labs
 
+## Istio
+
+
+
 ## Kafka and Event Streams
 
 * Go to https://github.com/remkohdev/kafka101
 * In the "Lab01 - Setup", go to https://github.com/remkohdev/kafka101/blob/master/Lab01/README.md#initialize-the-event-streams-service, because you are already logged into IBM Cloud and the IBM Event Streams plugin is already installed on your web-terminal, skip to the "Initialize the Event Streams Service" section, run the command "ibmcloud es init", and choose the number matching with the eventstreams service ending in your usernumber, e.g. "3. <account>-eventstreams-user<usernumber>",
+
 * Go to Lab02, https://github.com/remkohdev/kafka101/tree/master/Lab02
 * Read the introduction and skip the Download section, go to the Lab section, https://github.com/remkohdev/kafka101/blob/master/Lab02/README.md#lab
 * After you have the producer running and waiting for user input, open a new browser tab to run the consumer,
-* 
 
-broker-4-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-0-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-1-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-5-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-3-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-2-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093
+* Go to Lab03, 
+* If you have the Spring Boot CLI already installed, skip to the "Create a Spring App" section, https://github.com/remkohdev/kafka101/blob/master/Lab03/README.md#create-a-spring-app
 
-bash bin/kafka-console-consumer.sh --bootstrap-server broker-4-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-0-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-1-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-5-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-3-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093, broker-2-65fy1qk7jm9ybxjr.kafka.svc01.us-south.eventstreams.cloud.ibm.com:9093 --consumer.config mykafka.properties --topic greetings
+
+
+
