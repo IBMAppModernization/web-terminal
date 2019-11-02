@@ -27,29 +27,36 @@ RUN cd ttyd && mkdir build && cd build && cmake .. && make && make install
 RUN curl -sL https://ibm.biz/idt-installer | bash 
 RUN ibmcloud plugin install -f -r "IBM Cloud" event-streams
 
-# Add Node and Loopback
-#RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
-#RUN apt-get install -y nodejs
+# Add Node
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+RUN apt-get install -y nodejs
+# Add Loopback
 #RUN npm install -g loopback-cli
 
 # Install instioctl and samples
 WORKDIR /userdata
 
+# Install Istio (for samples)
 RUN curl -sL https://git.io/getLatestIstio | ISTIO_VERSION=$ISTIO_VERSION bash - \
   && cd ./istio-$ISTIO_VERSION \
   && cp bin/istioctl /usr/local/bin/istioctl
 
-# Install Kafka and console tools
+# Install Kafka (for console tools)
 ADD https://www-us.apache.org/dist/kafka/2.3.0/kafka_2.12-2.3.0.tgz .
 RUN tar -xvf kafka_2.12-2.3.0.tgz  
 RUN rm kafka_2.12-2.3.0.tgz
 
-# Install Spring Boot
+# Install Spring Boot (for spring boot cli)
 ADD https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.2.0.RELEASE/spring-boot-cli-2.2.0.RELEASE-bin.tar.gz .
 RUN tar -xvf spring-boot-cli-2.2.0.RELEASE-bin.tar.gz \
  && rm spring-boot-cli-2.2.0.RELEASE-bin.tar.gz
 ENV PATH=$PATH:/userdata/spring-2.2.0.RELEASE/bin
 RUN spring --version
+
+# Get the Guestbook (for kube101 labs) and Helm101 (for helm101 labs)
+RUN git clone https://github.com/IBM/guestbook.git
+RUN git clone https://github.com/remkohdev/helm101
+
 
 EXPOSE 7681
 

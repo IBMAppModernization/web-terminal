@@ -22,7 +22,6 @@ do
     echo "create cluster for user ${n}"
     # a. create cluster
 	ibmcloud ks cluster create classic --name "${account_name}_iks_cluster_user${n}" --zone $ibmcloud_admin_zone --machine-type $ibmcloud_admin_flavor --hardware shared --workers $ibmcloud_admin_cluster_workers --public-vlan $ibmcloud_admin_vlan_public_id --private-vlan $ibmcloud_admin_vlan_private_id
-
 done
 
 # CREATE KAFKA EVENT STREAMS

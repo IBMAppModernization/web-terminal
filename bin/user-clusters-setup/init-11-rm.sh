@@ -15,11 +15,16 @@ else
   echo "$config_file not found."
 fi
 
-echo "=====> enable istio on clusters"
+# REMOVE CLUSTER
 for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
-    echo "create cluster for user ${n}"
-	ibmcloud ks cluster addon enable istio --cluster "${account_name}_iks_cluster_user${n}"
-	ibmcloud ks cluster addon enable istio-extras --cluster "${account_name}_iks_cluster_user${n}"
-	ibmcloud ks cluster addon enable istio-sample-bookinfo --cluster "${account_name}_iks_cluster_user${n}"
+    echo "remove cluster ${n}"
+	ibmcloud ks cluster rm -f -c "${account_name}_iks_cluster_user${n}"
+done
+
+# DELETE SERVICE
+for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
+do
+    echo "delete event streams ${n}"
+	ibmcloud resource service-instance-delete "${account_name}-eventstreams-user${n}" 
 done

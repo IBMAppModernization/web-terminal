@@ -22,7 +22,7 @@ Each participant will be assigned their own usernumber, which will correspond wi
 
 ## Istio
 
-* Go to 
+* Go to https://github.com/remkohdev/istio101/labs
 
 ## Kafka and Event Streams
 

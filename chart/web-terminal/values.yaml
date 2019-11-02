@@ -1,7 +1,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-participantCount: 10
-tlsSecret: usbankikscluster1
-fullDomain: usbankikscluster1.us-south.containers.appdomain.cloud
-repository: remkohdev/ttyd-nodejs10-iks
-tag: 0.2.0
+participantCount: 40
+tlsSecret: adminiksclusterttyd0
+fullDomain: adminiksclusterttyd0.us-south.containers.appdomain.cloud
+repository: remkohdev/ttyd-iks-labs
+tag: 1.0.0
