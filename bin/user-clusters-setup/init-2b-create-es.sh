@@ -21,7 +21,7 @@ for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
     echo "create cluster for user ${n}"
     # a. create cluster
-	ibmcloud ks cluster create classic --name "${account_name}_iks_cluster_user${n}" --zone $ibmcloud_admin_zone --machine-type $ibmcloud_admin_flavor --hardware shared --workers $ibmcloud_admin_cluster_workers --public-vlan $ibmcloud_admin_vlan_public_id --private-vlan $ibmcloud_admin_vlan_private_id
+	ibmcloud ks cluster create classic --name "${account_name}iksuser${n}" --zone $ibmcloud_admin_zone --machine-type $ibmcloud_admin_flavor --hardware shared --workers $ibmcloud_admin_cluster_workers --public-vlan $ibmcloud_admin_vlan_public_id --private-vlan $ibmcloud_admin_vlan_private_id
 done
 
 # CREATE KAFKA EVENT STREAMS
@@ -30,6 +30,6 @@ echo "=====> 3. create kafka event streams"
 for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
     echo "create kafka event streams for user ${n}"
-	ibmcloud resource service-instance-create "${account_name}-eventstreams-user${n}" messagehub standard "${ibmcloud_admin_region}"
-	ibmcloud resource service-key-create "${account_name}-eventstreams-user${n}-credentials1" Manager --instance-name "${account_name}-eventstreams-user${n}"
+	ibmcloud resource service-instance-create "${account_name}esuser${n}" messagehub standard "${ibmcloud_admin_region}"
+	ibmcloud resource service-key-create "${account_name}esuser${n}credentials1" Manager --instance-name "${account_name}esuser${n}"
 done

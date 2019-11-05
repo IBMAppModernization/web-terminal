@@ -27,7 +27,7 @@ then
     #key=$(echo $key | tr '.' '_')
 	key=$(echo $key | tr .-/ _ | tr -cd 'A-Za-z0-9_')
     eval ${key}=\${value}
-  done < "$config_file"
+  done < "${config_file}"
   echo "account.name=" ${account_name}
   echo "number_of_users=" ${number_of_users}
   echo "user_offset=" ${user_offset}
@@ -51,5 +51,5 @@ echo "=====> login to ibmcloud"
 echo ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
 ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
 
-echo ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s dev -o $ibmcloud_admin_org
-ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s dev -o $ibmcloud_admin_org
+echo ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" 
+ibmcloud target --cf-api "${ibmcloud_admin_cfapi}"

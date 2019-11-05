@@ -1,0 +1,5 @@
+bin/user-clusters-setup/init-dal10.properties
+bin/user-clusters-setup/init-wdc04.properties
+bin/user-clusters-setup/README.md
+bin/web-terminal-clusters-setup/admin.properties
+

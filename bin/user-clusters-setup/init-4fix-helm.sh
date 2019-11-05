@@ -15,20 +15,24 @@ else
   echo "$config_file not found."
 fi
 
-echo "=====> enable istio on clusters"
+echo "=====> fix helm on clusters"
 for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
-
-	# Login to the IKS service
-	ZONE=dal10
-	CLUSTER_NAME="usbank-iks-cluster-user${n}"
+	ZONE="dal10"
+	CLUSTER_NAME="usbankiksuser${n}"
+	
 	ibmcloud ks cluster config --cluster "${CLUSTER_NAME}"
 	export KUBECONFIG="/${HOME}/.bluemix/plugins/container-service/clusters/${CLUSTER_NAME}/kube-config-${ZONE}-${CLUSTER_NAME}.yml"
 
+	kubectl config current-context
+
 	# Fix the Helm install
 	kubectl create serviceaccount --namespace kube-system tiller
+	sleep 5s
 	kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+	sleep 5s
 	helm init --upgrade
+	sleep 5s
 	kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 
 done

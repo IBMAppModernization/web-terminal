@@ -19,12 +19,5 @@ fi
 for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
     echo "remove cluster ${n}"
-	ibmcloud ks cluster rm -f -c "${account_name}_iks_cluster_user${n}"
-done
-
-# DELETE SERVICE
-for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
-do
-    echo "delete event streams ${n}"
-	ibmcloud resource service-instance-delete "${account_name}-eventstreams-user${n}" 
+	ibmcloud ks cluster rm -f -c "${account_name}iksclusteruser${n}"
 done

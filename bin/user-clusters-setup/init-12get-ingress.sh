@@ -15,11 +15,11 @@ else
   echo "$config_file not found."
 fi
 
-echo "=====> enable istio on clusters"
+# CREATE CLUSTERS
+echo "=====> 2. create clusters"
 for (( n=$user_offset;n<($number_of_users+$user_offset);n++ ))
 do
-    echo "enable istio for user ${n}"
-	ibmcloud ks cluster addon enable istio --cluster "${account_name}iksuser${n}"
-	ibmcloud ks cluster addon enable istio-extras --cluster "${account_name}iksuser${n}"
-	ibmcloud ks cluster addon enable istio-sample-bookinfo --cluster "${account_name}iksuser${n}"
+    echo "get ingress for cluster ${n}"
+	ibmcloud ks cluster get --cluster "${account_name}iksclusteruser${n}" | grep Ingress
+
 done

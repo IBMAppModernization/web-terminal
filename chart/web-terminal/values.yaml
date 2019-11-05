@@ -1,7 +1,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 participantCount: 40
-tlsSecret: adminiksclusterttyd0
-fullDomain: adminiksclusterttyd0.us-south.containers.appdomain.cloud
-repository: remkohdev/ttyd-iks-labs
-tag: 1.0.0
+tlsSecret: clustername
+fullDomain: clustername.region.containers.appdomain.cloud
+repository: registry/image-name
+tag: 1.0.1
