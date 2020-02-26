@@ -31,9 +31,9 @@ then
   echo "account.name=" ${account_name}
   echo "number_of_users=" ${number_of_users}
   echo "user_offset=" ${user_offset}
-  echo "ibmcloud.admin.username=" ${ibmcloud_admin_username}
-  echo "ibmcloud.admin.password=" ${ibmcloud_admin_password}
+  echo "account_apikey=" ${account_apikey}
   echo "ibmcloud.admin.org=" ${ibmcloud_admin_org}
+  echo "ibmcloud.admin.space=" ${ibmcloud_admin_space}
   echo "ibmcloud.admin.resourcegroup=" ${ibmcloud_admin_resourcegroup}
   echo "ibmcloud.admin.cfapi=" ${ibmcloud_admin_cfapi}
   echo "ibmcloud.admin.region=" ${ibmcloud_admin_region}
@@ -48,8 +48,8 @@ fi
 
 # LOGIN
 echo "=====> login to ibmcloud"
-echo ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
-ibmcloud login -u "${ibmcloud_admin_username}" -p "${ibmcloud_admin_password}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
+echo ibmcloud login --apikey "${account_apikey}" -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
+ibmcloud login --apikey "${account_apikey}"  -r "${ibmcloud_admin_region}" -g $ibmcloud_admin_resourcegroup
 
-echo ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" 
-ibmcloud target --cf-api "${ibmcloud_admin_cfapi}"
+echo ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s "${ibmcloud_admin_space}"
+ibmcloud target --cf-api "${ibmcloud_admin_cfapi}" -s "${ibmcloud_admin_space}"
