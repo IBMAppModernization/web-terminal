@@ -1,7 +1,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-participantCount: 5
-tlsSecret: testing-cluster
-fullDomain: testing-cluster.us-east.containers.appdomain.cloud
-repository: ibmappmodernization/web-terminal
-tag: nodejs10
+participantCount: 25
+tlsSecret: oliver-gdit-terms-2bef1f4b4097001da9502000c44fc2b2-0000
+fullDomain: oliver-gdit-terms-2bef1f4b4097001da9502000c44fc2b2-0000.us-east.containers.appdomain.cloud
+repository: odrodrig/s2i-term
+tag: 0.3.0
