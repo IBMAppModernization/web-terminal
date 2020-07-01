@@ -1,11 +1,14 @@
 {{- $image := printf "%s:%s" .Values.repository .Values.tag -}}
 {{- range $index := untilStep 1 (int ( add (int .Values.participantCount) 1 )) 1 }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "terminal-{{ $index }}"
 spec:
   replicas: 1
+  selector: 
+    matchLabels:
+      app: "terminal-{{ $index }}"
   template:
     metadata:
       labels:
