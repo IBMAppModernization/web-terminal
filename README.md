@@ -4,7 +4,7 @@ Do you want to run a hands-on workshop with developers on client site? Do the de
 
 While this is an open source offering, this is currently configured to work for the IBM Kubernetes Service. Changes to `web-terminal-ingress.yaml` would be required for deployment to another managed Kubernetes service.
 
-This will set up a fully functioning bash shell inside an ubuntu container for you, with the following things pre-installed:
+This will set up a fully functioning bash shell inside an ubuntu container for you, with the following client tools pre-installed:
 
 - Docker
 - Kubectl
@@ -18,9 +18,32 @@ Additionally, this gives you the ability to install just about any other runtime
 - Python (Machine Learning workshops)
 - Swift (Best workshops)
 
-![](./images/working-web-terminal.png)
-
 You can configure this to set up as many terminals as you want for as many people as you want (within reason), and each participant will have their own persistent storage for Docker images and their file system.
+
+### Quick Start
+
+```
+$ export CLUSTERNAME=<your-clustername>
+$ ibmcloud ks cluster get --cluster $CLUSTERNAME | grep Ingress
+
+$ export INGRESS_TLSSECRET=<your-ingress-tlssecret>
+$ export INGRESS_DOMAIN=<your-ingress-domain>
+
+$ export DOCKER_USERNAME=<your-docker-username>
+$ export DOCKER_PASSWORD=<your-docker-password>
+$ export DOCKER_IMAGE_TAG=0.1.0
+
+$ export USERCOUNT=30
+
+$ docker build --no-cache -t web-terminal:latest -f Dockerfile-s2i-oc-tekton-operator .
+$ docker tag "web-terminal:latest" "$DOCKER_USERNAME/web-terminal:$DOCKER_IMAGE_TAG"
+$ docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+docker push "docker.io/remkohdev/web-terminal:$DOCKER_IMAGE_TAG"
+
+helm install web-terminal chart/web-terminal/ --set participantCount=$USERCOUNT --set tlsSecret=$INGRESS_TLSSECRET --set fullDomain=$INGRESS_DOMAIN --set repository="docker.io/$DOCKER_USERNAME/web-terminal" --set tag="$DOCKER_IMAGE_TAG"
+	
+helm uninstall web-terminal
+```
 
 ### Getting Started
 
@@ -58,7 +81,15 @@ Provision a Kubernetes cluster. Again, if you are using the IKS, you cannot use 
 - can not leverage a persistent volume
 - can not leverage an ingress controller
 
-In Terminal, log into IBM Cloud with `ibmcloud login`. Run `ibmcloud ks clusters` to get the name of your cluster:
+In Terminal, log into IBM Cloud with `ibmcloud login`. 
+
+Set your cluster name:
+
+```
+CLUSTERNAME=<your cluster name>
+```
+
+Run `ibmcloud ks clusters` to get the name of your cluster:
 
 ```bash
 testing-cluster           bkss2low0aucnromsrm0               normal   2 weeks ago   1         Washington D.C.   1.13.8_1529   dokun-personal
@@ -68,7 +99,7 @@ The name of your cluster, in this instance, is `testing-cluster`.
 
 ### Step 2
 
-Next, get the details of DNS and the TLS secret on your cluster with the command `ibmcloud ks cluster-get --cluster testing-cluster | grep Ingress`. Your output should look like this:
+Next, get the details of DNS and the TLS secret on your cluster with the command `ibmcloud ks cluster get --cluster $CLUSTERNAME | grep Ingress`. Your output should look like this:
 
 ```bash
 Ingress Subdomain:              testing-cluster.us-east.containers.appdomain.cloud

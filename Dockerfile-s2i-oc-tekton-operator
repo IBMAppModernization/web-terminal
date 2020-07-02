@@ -1,0 +1,53 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get install -y \
+  cmake \
+  curl \
+  g++ \
+  pkg-config \
+  git \
+  vim-common \
+  libwebsockets-dev \
+  libjson-c-dev \
+  libssl-dev \
+  sudo \
+  systemd \
+&& rm -rf /var/lib/apt/lists/*
+
+# NODE
+#RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+#RUN apt-get install -y nodejs
+# RUN npm install -g loopback-cli
+
+RUN curl -sL https://ibm.biz/idt-installer | bash
+
+# helm v3
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+  chmod 700 get_helm.sh && \
+  ./get_helm.sh
+
+# OC
+RUN curl -L -O https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz && \
+  tar -xvf oc.tar.gz && \
+  mv oc /usr/local/bin && \
+  rm oc.tar.gz
+
+# S2I
+RUN curl -L -O https://github.com/openshift/source-to-image/releases/download/v1.3.0/source-to-image-v1.3.0-eed2850f-linux-amd64.tar.gz && \
+  tar -xvf source-to-image-v1.3.0-eed2850f-linux-amd64.tar.gz && \
+  mv s2i /usr/local/bin && \
+  rm source-to-image-v1.3.0-eed2850f-linux-amd64.tar.gz
+
+# TEKTON
+RUN curl -LO https://github.com/tektoncd/cli/releases/download/v0.10.0/tkn_0.10.0_Linux_x86_64.tar.gz && \
+  sudo tar xvzf tkn_0.10.0_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn
+
+# OPERATOR-SDK
+RUN curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v0.18.2/operator-sdk-v0.18.2-x86_64-linux-gnu && \
+  chmod +x operator-sdk-v0.18.2-x86_64-linux-gnu && sudo mkdir -p /usr/local/bin/ && sudo cp operator-sdk-v0.18.2-x86_64-linux-gnu /usr/local/bin/operator-sdk && rm operator-sdk-v0.18.2-x86_64-linux-gnu
+
+RUN git clone https://github.com/tsl0922/ttyd.git
+RUN cd ttyd && mkdir build && cd build && cmake .. && make && make install
+EXPOSE 7681
+
+CMD ["ttyd", "-p", "7681", "bash"]
