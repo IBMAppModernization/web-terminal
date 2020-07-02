@@ -48,8 +48,8 @@ $ oc version
 $ helm version --short
 $ s2i version
 $ tkn version
+$ go version
 $ operator-sdk version
-
 
 $ helm uninstall web-terminal
 ```

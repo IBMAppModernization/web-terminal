@@ -42,6 +42,11 @@ RUN curl -L -O https://github.com/openshift/source-to-image/releases/download/v1
 RUN curl -LO https://github.com/tektoncd/cli/releases/download/v0.10.0/tkn_0.10.0_Linux_x86_64.tar.gz && \
   sudo tar xvzf tkn_0.10.0_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn
 
+# GO TOOLS
+RUN curl -LO https://golang.org/dl/go1.14.4.linux-amd64.tar.gz && \
+  tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz && \
+  export PATH=$PATH:/usr/local/go/bin
+
 # OPERATOR-SDK
 RUN curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v0.18.2/operator-sdk-v0.18.2-x86_64-linux-gnu && \
   chmod +x operator-sdk-v0.18.2-x86_64-linux-gnu && sudo mkdir -p /usr/local/bin/ && sudo cp operator-sdk-v0.18.2-x86_64-linux-gnu /usr/local/bin/operator-sdk && rm operator-sdk-v0.18.2-x86_64-linux-gnu
