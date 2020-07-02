@@ -41,7 +41,16 @@ $ docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 $ docker push "docker.io/remkohdev/web-terminal:$DOCKER_IMAGE_TAG"
 
 $ helm install web-terminal chart/web-terminal/ --set participantCount=$USERCOUNT --set tlsSecret=$INGRESS_TLSSECRET --set fullDomain=$INGRESS_DOMAIN --set repository="docker.io/$DOCKER_USERNAME/web-terminal" --set tag="$DOCKER_IMAGE_TAG"
-	
+
+$ docker version
+$ kubectl version
+$ oc version
+$ helm version --short
+$ s2i version
+$ tkn version
+$ operator-sdk version
+
+
 $ helm uninstall web-terminal
 ```
 
