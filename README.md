@@ -38,7 +38,7 @@ $ export USERCOUNT=30
 $ docker build --no-cache -t web-terminal:latest -f Dockerfile-s2i-oc-tekton-operator .
 $ docker tag "web-terminal:latest" "$DOCKER_USERNAME/web-terminal:$DOCKER_IMAGE_TAG"
 $ docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-docker push "docker.io/remkohdev/web-terminal:$DOCKER_IMAGE_TAG"
+$ docker push "docker.io/remkohdev/web-terminal:$DOCKER_IMAGE_TAG"
 
 $ helm install web-terminal chart/web-terminal/ --set participantCount=$USERCOUNT --set tlsSecret=$INGRESS_TLSSECRET --set fullDomain=$INGRESS_DOMAIN --set repository="docker.io/$DOCKER_USERNAME/web-terminal" --set tag="$DOCKER_IMAGE_TAG"
 	
